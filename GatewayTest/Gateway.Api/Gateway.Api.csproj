@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Gateway.DB\Gateway.DB.csproj" />
     <ProjectReference Include="..\Gateway.Domain\Gateway.Domain.csproj" />
+    <ProjectReference Include="..\Gateway.Service\Gateway.Service.csproj" />
   </ItemGroup>
 
 </Project>

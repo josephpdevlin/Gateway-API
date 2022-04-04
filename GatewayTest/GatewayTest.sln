@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway.DB", "Gateway.DB\Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway.Domain", "Gateway.Domain\Gateway.Domain.csproj", "{8D521302-E24C-4111-AAC4-51280C8BFA14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Service", "Gateway.Service\Gateway.Service.csproj", "{6948DF3E-209B-4F0C-A971-587DB56D64C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8D521302-E24C-4111-AAC4-51280C8BFA14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D521302-E24C-4111-AAC4-51280C8BFA14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D521302-E24C-4111-AAC4-51280C8BFA14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6948DF3E-209B-4F0C-A971-587DB56D64C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6948DF3E-209B-4F0C-A971-587DB56D64C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6948DF3E-209B-4F0C-A971-587DB56D64C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6948DF3E-209B-4F0C-A971-587DB56D64C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 ﻿namespace Gateway.Api.Models
 {
-    public class PaymentResponseModel
+    public class PaymentResponseDto
     {
         public int PaymentId { get; set; }
 

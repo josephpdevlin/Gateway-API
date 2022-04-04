@@ -1,11 +1,11 @@
-﻿using Gateway.Api.Models;
+﻿using Gateway.Domain;
 using System.Text.RegularExpressions;
 
-namespace Gateway.Api.Services.Validation
+namespace Gateway.Service.Validation
 {
     public class RequestValidator : IRequestValidator
     {
-        public List<string> ValidateRequest(PaymentRequestModel model)
+        public List<string> ValidateRequest(PaymentRequest model)
         {
             var errorList = new List<string>();
 

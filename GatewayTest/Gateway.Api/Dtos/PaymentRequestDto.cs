@@ -2,7 +2,7 @@
 
 namespace Gateway.Api.Models
 {
-    public class PaymentRequestModel
+    public class PaymentRequestDto
     {
         public string ReferenceKey { get; set; }
 

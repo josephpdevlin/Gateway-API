@@ -1,11 +1,11 @@
-﻿using Gateway.Api.Models;
+﻿using Gateway.DB;
 using Gateway.Domain;
 
-namespace Gateway.Api
+namespace Gateway.Service
 {
     public static class SimulatedBank
     {
-        public static async Task<BankResponse> ProcessPaymentRequest(PaymentRequestDto model)
+        public static async Task<BankResponse> ProcessPaymentRequest(PaymentRequest model)
         {
             if(model.Amount <= 100m)
             {

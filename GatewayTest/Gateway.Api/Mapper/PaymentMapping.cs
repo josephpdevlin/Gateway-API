@@ -8,8 +8,8 @@ namespace Gateway.Api.Mapper
     {
         public PaymentMapping()
         {
-            CreateMap<PaymentRequestModel, Payment>();
-            CreateMap<PaymentResponseModel, Payment>().ReverseMap();
+            CreateMap<PaymentRequestDto, Payment>();
+            CreateMap<PaymentResponseDto, Payment>().ReverseMap();
         }
     }
 }

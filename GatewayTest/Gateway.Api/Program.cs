@@ -1,6 +1,6 @@
-using Gateway.Api.Services;
-using Gateway.Api.Services.Validation;
 using Gateway.DB;
+using Gateway.Service;
+using Gateway.Service.Validation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

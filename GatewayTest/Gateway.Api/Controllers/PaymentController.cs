@@ -1,6 +1,8 @@
-﻿using Gateway.Api.Models;
-using Gateway.Api.Services;
-using Gateway.Api.Services.Validation;
+﻿using AutoMapper;
+using Gateway.Api.Models;
+using Gateway.Domain;
+using Gateway.Service;
+using Gateway.Service.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Api.Controllers
@@ -11,19 +13,22 @@ namespace Gateway.Api.Controllers
     {
         private IRequestManager _requestManager;
         private IRequestValidator _requestValidator;
+        private readonly IMapper _mapper;
 
-        public PaymentController(IRequestManager requestManager, IRequestValidator requestValidator)
+        public PaymentController(IRequestManager requestManager, IRequestValidator requestValidator, IMapper mapper)
         {
             _requestManager = requestManager;
             _requestValidator = requestValidator;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaymentResponseModel>> Get(int id)
+        public async Task<ActionResult<PaymentResponseDto>> Get(int id)
         {
             try
             {
-                return await _requestManager.GetPaymentRecord(id);
+                var record = await _requestManager.GetPaymentRecord(id);
+                return _mapper.Map<PaymentResponseDto>(record);
             }
             catch(Exception ex)
             {
@@ -32,7 +37,7 @@ namespace Gateway.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromHeader]string idempotencyKey, PaymentRequestModel model)
+        public async Task<IActionResult> Post([FromHeader]string idempotencyKey, PaymentRequestDto model)
         {
             try
             {
@@ -42,17 +47,18 @@ namespace Gateway.Api.Controllers
                     return CreatedAtAction(nameof(Post), duplicateRequest);
                 }
 
-                var validationErrors = _requestValidator.ValidateRequest(model);
+                var request = _mapper.Map<PaymentRequest>(model);
+                var validationErrors = _requestValidator.ValidateRequest(request);
                 if(validationErrors.Count > 0)
                 {
-                    var errorModel = new PaymentRequestErrorModel()
+                    var errorModel = new PaymentRequestErrorDto()
                     {
                         Errors = validationErrors
                     };
                     return BadRequest(errorModel);
                 }
 
-                var response = await _requestManager.CreatePaymentRequest(idempotencyKey, model);
+                var response = await _requestManager.CreatePaymentRequest(idempotencyKey, request);
                 return CreatedAtAction(nameof(Post), response);
             }
             catch (Exception ex)
