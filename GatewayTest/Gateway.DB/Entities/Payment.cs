@@ -1,4 +1,5 @@
 ﻿using Gateway.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gateway.DB
 {
@@ -14,8 +15,15 @@ namespace Gateway.DB
 
         public DateTime LastUpdatedDateTime { get; set; }
 
-        public PaymentStatus Status { get; set; } 
+        public string Status { get; set; }
 
-        public virtual Card Card { get; set; }
+        public string Name { get; set; }
+
+        [MaxLength(16)]
+        public string Number { get; set; }
+
+        public int ExpiryMonth { get; set; }
+
+        public int ExpiryYear { get; set; }
     }
 }

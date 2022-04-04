@@ -1,6 +1,5 @@
 ﻿using Gateway.Api.Models;
-using Gateway.DB;
-using Gateway.Domain.Enums;
+using Gateway.Domain;
 
 namespace Gateway.Api
 {
@@ -12,24 +11,22 @@ namespace Gateway.Api
             {
                 return new BankResponse()
                 {
-                    Id = 0,
-                    ProcessedDate = DateTime.Now,
-                    Status = PaymentStatus.Succeded,
+                    Status = "Succeded",
                     Amount = model.Amount,
-                    IssuingBank = "Monzo Bank Ltd",
-                    Name = model.Card.Name
+                    IssuingBank = "Monzo Bank Ltd"
                 };
+            }
+            else if (model.Number == "5555555555554444")
+            {
+                return null;
             }
             else
             {
                 return new BankResponse()
                 {
-                    Id = 0,
-                    ProcessedDate = DateTime.Now,
-                    Status = PaymentStatus.Declined,
+                    Status = "Declined",
                     Amount = model.Amount,
-                    IssuingBank = "Monzo Bank Ltd",
-                    Name = model.Card.Name
+                    IssuingBank = "Monzo Bank Ltd"
                 };
             }
 

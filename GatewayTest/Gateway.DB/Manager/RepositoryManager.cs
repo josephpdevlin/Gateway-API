@@ -1,6 +1,4 @@
-﻿using Gateway.Domain.Enums;
-
-namespace Gateway.DB
+﻿namespace Gateway.DB
 {
     public class RepositoryManager : IRepositoryManager
     {
@@ -13,23 +11,13 @@ namespace Gateway.DB
 
         public void Insert(Payment payment)
         {
-            _context.Add(payment);
+            _context.Payments.Add(payment);
             _context.SaveChanges();
         }
 
         public async Task<Payment> GetPayment(int id)
         {
             return await _context.FindAsync<Payment>(id);
-        }
-
-        public void AddBankResponse(BankResponse bankResponse)
-        {
-            _context.BankResponses.Add(bankResponse);
-        }
-
-        public BankResponse GetBankResponse(int paymentId)
-        {
-            return _context.BankResponses.SingleOrDefault(x => x.PaymentId == paymentId);
         }
 
         public void InsertIdempotencyRecord(IdempotencyRecord idempotencyRecord)
@@ -42,7 +30,7 @@ namespace Gateway.DB
             return _context.IdempotencyRecords.SingleOrDefault(x => x.IdempotencyKey == idempotencyKey);
         }
 
-        public void UpdateStatus(int id, PaymentStatus status)
+        public void UpdateStatus(int id, string status)
         {
             var payment = _context.Payments.FirstOrDefault(x => x.Id == id);
             payment.Status = status;

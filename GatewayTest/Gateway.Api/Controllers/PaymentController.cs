@@ -1,7 +1,6 @@
 ﻿using Gateway.Api.Models;
 using Gateway.Api.Services;
 using Gateway.Api.Services.Validation;
-using Gateway.DB;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gateway.Api.Controllers
@@ -20,16 +19,18 @@ namespace Gateway.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Payment>> Get(int id)
+        public async Task<ActionResult<PaymentResponseModel>> Get(int id)
         {
-            return await _requestManager.GetPaymentRecord(id);
+            try
+            {
+                return await _requestManager.GetPaymentRecord(id);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromHeader]string idempotencyKey, PaymentRequestModel model)
         {

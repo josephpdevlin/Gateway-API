@@ -1,14 +1,13 @@
 ﻿using Gateway.Api.Models;
-using Gateway.DB;
 
 namespace Gateway.Api.Services
 {
     public interface IRequestManager
     {
-        Task<BankResponseModel> CreatePaymentRequest(string idempotencyKey, PaymentRequestModel model);
+        Task<PaymentResponseModel> CreatePaymentRequest(string idempotencyKey, PaymentRequestModel model);
 
-        Task<Payment> GetPaymentRecord(int id);
+        Task<PaymentResponseModel> GetPaymentRecord(int id);
 
-        BankResponseModel CheckForDuplicateRequest(string idempotencyKey);
+        PaymentResponseModel CheckForDuplicateRequest(string idempotencyKey);
     }
 }

@@ -7,14 +7,10 @@ namespace Gateway.DB
 
         Task<Payment> GetPayment(int id);
 
-        BankResponse GetBankResponse(int id);
-
-        void AddBankResponse(BankResponse bankResponse);
-
         void InsertIdempotencyRecord(IdempotencyRecord idempotencyRecord);
 
         IdempotencyRecord GetIdempotencyRecord(string idempotencyKey);
 
-        void UpdateStatus(int id, PaymentStatus status);
+        void UpdateStatus(int id, string status);
     }
 }

@@ -1,4 +1,3 @@
-using AutoMapper;
 using Gateway.Api.Services;
 using Gateway.Api.Services.Validation;
 using Gateway.DB;

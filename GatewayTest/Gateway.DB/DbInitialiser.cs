@@ -1,6 +1,4 @@
-﻿using Gateway.Domain.Enums;
-
-namespace Gateway.DB
+﻿namespace Gateway.DB
 {
     public static class DbInitialiser
     {
@@ -14,18 +12,14 @@ namespace Gateway.DB
                 Id = 1,
                 Amount = 100,
                 Currency = "GBP",
-                Status = PaymentStatus.Succeded,
-                Card = new Card()
-                {
-                    Id = 1,
-                    Number = "4012888888881881",
-                    Name = "Jenny Gray",
-                    ExpiryMonth = 1,
-                    ExpiryYear = 25,
-                }
+                Status = "Succeded",
+                Number = "************1881",
+                Name = "Jenny Gray",
+                ExpiryMonth = 1,
+                ExpiryYear = 25
             };
 
-            dbContext.Add(payment);
+            dbContext.Payments.Add(payment);
             dbContext.SaveChanges();
         }
     }

@@ -1,18 +1,10 @@
 ﻿using Gateway.Api.Models;
-using Gateway.DB;
 using System.Text.RegularExpressions;
 
 namespace Gateway.Api.Services.Validation
 {
     public class RequestValidator : IRequestValidator
     {
-        private IRepositoryManager _repositoryManager;
-
-        public RequestValidator(IRepositoryManager repositoryManager)
-        {
-            _repositoryManager = repositoryManager;
-        }
-
         public List<string> ValidateRequest(PaymentRequestModel model)
         {
             var errorList = new List<string>();
@@ -24,16 +16,16 @@ namespace Gateway.Api.Services.Validation
             if (currency != "GBP" && currency != "USD" && currency != "EUR")
                 errorList.Add("Unsupported currency");
 
-            if (string.IsNullOrEmpty(model.Card.Name))
+            if (string.IsNullOrEmpty(model.Name))
                 errorList.Add("Name required");
 
-            var lastDayOfMonth = DateTime.DaysInMonth(model.Card.ExpiryYear, model.Card.ExpiryMonth);
-            var cardExpiryDate = new DateTime(model.Card.ExpiryYear, model.Card.ExpiryMonth, lastDayOfMonth);
+            var lastDayOfMonth = DateTime.DaysInMonth(model.ExpiryYear, model.ExpiryMonth);
+            var cardExpiryDate = new DateTime(model.ExpiryYear, model.ExpiryMonth, lastDayOfMonth);
             if (cardExpiryDate < DateTime.UtcNow)
                 errorList.Add("Card expired");
 
             var cvvRegex = "^[0-9]{3,4}$";
-            var isValidCvv = Regex.Match(model.Card.CVV.ToString(), cvvRegex).Success;
+            var isValidCvv = Regex.Match(model.CVV.ToString(), cvvRegex).Success;
             if (!isValidCvv)
                 errorList.Add("Invalid CVV");
 
