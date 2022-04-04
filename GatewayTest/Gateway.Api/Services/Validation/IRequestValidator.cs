@@ -4,7 +4,5 @@ namespace Gateway.Api.Services.Validation
     public interface IRequestValidator
     {
         List<string> ValidateRequest(PaymentRequestModel model);
-
-        bool CheckIsRepeatRequest(string idempotencyKey);
     }
 }

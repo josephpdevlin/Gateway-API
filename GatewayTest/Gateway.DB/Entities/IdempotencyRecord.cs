@@ -1,21 +1,20 @@
-﻿using Gateway.Domain.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Gateway.DB
 {
-    public class BankResponse
+    public class IdempotencyRecord
     {
         public int Id { get; set; }
 
         public string IdempotencyKey { get; set; }
 
-        public PaymentStatus Status { get; set; }
+        public int PaymentId { get; set; }
+        public virtual Payment Payment { get; set; }
 
-        public DateTime ProcessedDate { get; set; }
-
-        public string IssuingBank { get; set; }
-
-        public string Name { get; set; }
-
-        public decimal Amount { get; set; }
+        public DateTime CreatedDateTime {get;set;}
     }
 }

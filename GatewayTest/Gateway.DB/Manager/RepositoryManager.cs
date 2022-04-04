@@ -17,9 +17,29 @@ namespace Gateway.DB
             _context.SaveChanges();
         }
 
-        public async Task<Payment> Get(int id)
+        public async Task<Payment> GetPayment(int id)
         {
             return await _context.FindAsync<Payment>(id);
+        }
+
+        public void AddBankResponse(BankResponse bankResponse)
+        {
+            _context.BankResponses.Add(bankResponse);
+        }
+
+        public BankResponse GetBankResponse(int paymentId)
+        {
+            return _context.BankResponses.SingleOrDefault(x => x.PaymentId == paymentId);
+        }
+
+        public void InsertIdempotencyRecord(IdempotencyRecord idempotencyRecord)
+        {
+            _context.IdempotencyRecords.Add(idempotencyRecord);
+        }
+
+        public IdempotencyRecord GetIdempotencyRecord(string idempotencyKey)
+        {
+            return _context.IdempotencyRecords.SingleOrDefault(x => x.IdempotencyKey == idempotencyKey);
         }
 
         public void UpdateStatus(int id, PaymentStatus status)
@@ -27,11 +47,6 @@ namespace Gateway.DB
             var payment = _context.Payments.FirstOrDefault(x => x.Id == id);
             payment.Status = status;
             _context.SaveChanges();
-        }
-
-        public bool IsDuplicateRequest(string idempotencyKey)
-        {
-            return _context.IdempotencyRecord.Any(x => x.IdempotencyKey == idempotencyKey);
         }
     }
 }

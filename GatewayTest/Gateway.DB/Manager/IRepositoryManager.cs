@@ -5,10 +5,16 @@ namespace Gateway.DB
     {
         void Insert(Payment payment);
 
-        Task<Payment> Get(int id);
+        Task<Payment> GetPayment(int id);
+
+        BankResponse GetBankResponse(int id);
+
+        void AddBankResponse(BankResponse bankResponse);
+
+        void InsertIdempotencyRecord(IdempotencyRecord idempotencyRecord);
+
+        IdempotencyRecord GetIdempotencyRecord(string idempotencyKey);
 
         void UpdateStatus(int id, PaymentStatus status);
-
-        bool IsDuplicateRequest(string idempotencyKey);
     }
 }

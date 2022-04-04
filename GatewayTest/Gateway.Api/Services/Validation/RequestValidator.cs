@@ -39,10 +39,5 @@ namespace Gateway.Api.Services.Validation
 
             return errorList;
         }
-
-        public bool CheckIsRepeatRequest(string idempotencyKey)
-        {
-            return _repositoryManager.IsDuplicateRequest(idempotencyKey);
-        }
     }
 }

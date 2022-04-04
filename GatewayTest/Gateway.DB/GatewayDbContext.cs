@@ -12,6 +12,8 @@ namespace Gateway.DB
 
         public DbSet<Card> Cards { get; set; }
 
-        public DbSet<BankResponse> IdempotencyRecord {get;set;}
+        public DbSet<BankResponse> BankResponses {get;set;}
+
+        public DbSet<IdempotencyRecord> IdempotencyRecords { get; set; }
     }
 }

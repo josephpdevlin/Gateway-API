@@ -5,8 +5,10 @@ namespace Gateway.Api.Services
 {
     public interface IRequestManager
     {
-        Task<BankResponseModel> CreatePaymentRequest(PaymentRequestModel model);
+        Task<BankResponseModel> CreatePaymentRequest(string idempotencyKey, PaymentRequestModel model);
 
         Task<Payment> GetPaymentRecord(int id);
+
+        BankResponseModel CheckForDuplicateRequest(string idempotencyKey);
     }
 }

@@ -10,7 +10,7 @@ namespace Gateway.Api.Mapper
         {
             CreateMap<PaymentRequestModel, Payment>();
             CreateMap<CardModel, Card>();
-            CreateMap<BankResponseModel, BankResponse>();
+            CreateMap<BankResponseModel, BankResponse>().ReverseMap();
         }
     }
 }

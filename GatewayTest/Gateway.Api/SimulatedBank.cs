@@ -1,15 +1,16 @@
 ﻿using Gateway.Api.Models;
+using Gateway.DB;
 using Gateway.Domain.Enums;
 
 namespace Gateway.Api
 {
     public static class SimulatedBank
     {
-        public static async Task<BankResponseModel> ProcessPaymentRequest(PaymentRequestModel model)
+        public static async Task<BankResponse> ProcessPaymentRequest(PaymentRequestModel model)
         {
             if(model.Amount <= 100m)
             {
-                return new BankResponseModel()
+                return new BankResponse()
                 {
                     Id = 0,
                     ProcessedDate = DateTime.Now,
@@ -21,7 +22,7 @@ namespace Gateway.Api
             }
             else
             {
-                return new BankResponseModel()
+                return new BankResponse()
                 {
                     Id = 0,
                     ProcessedDate = DateTime.Now,

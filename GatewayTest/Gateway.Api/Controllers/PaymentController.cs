@@ -35,6 +35,12 @@ namespace Gateway.Api.Controllers
         {
             try
             {
+                var duplicateRequest = _requestManager.CheckForDuplicateRequest(idempotencyKey);
+                if (duplicateRequest != null)
+                {
+                    return CreatedAtAction(nameof(Post), duplicateRequest);
+                }
+
                 var validationErrors = _requestValidator.ValidateRequest(model);
                 if(validationErrors.Count > 0)
                 {
@@ -45,7 +51,7 @@ namespace Gateway.Api.Controllers
                     return BadRequest(errorModel);
                 }
 
-                var response = await _requestManager.CreatePaymentRequest(model);
+                var response = await _requestManager.CreatePaymentRequest(idempotencyKey, model);
                 return CreatedAtAction(nameof(Post), response);
             }
             catch (Exception ex)
