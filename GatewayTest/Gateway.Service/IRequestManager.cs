@@ -5,14 +5,14 @@ namespace Gateway.Service
 {
     public interface IRequestManager
     {
-        Task<PaymentResponse> CreatePaymentRequest(string idempotencyKey, PaymentRequest model);
+        Task<PaymentResponse> CreatePaymentRequest(PaymentRequest model);
 
         Task<PaymentResponse> GetPaymentRecord(int id);
 
         Task<PaymentResponse?> CheckForDuplicateRequest(string idempotencyKey);
 
-        void CreateIdempotencyRecord(string idempotencyKey, PaymentRequest payment);
+        void CreateIdempotencyRecord(string idempotencyKey, Payment payment);
 
-        Payment CreatePaymentRecord(PaymentRequest payment);
+        Payment CreatePaymentRecordAndIdempotencyRecord(PaymentRequest payment);
     }
 }

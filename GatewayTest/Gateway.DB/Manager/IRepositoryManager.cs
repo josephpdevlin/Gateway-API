@@ -1,4 +1,5 @@
-﻿using Gateway.Domain.Enums;
+﻿using Gateway.Domain;
+using Gateway.Domain.Enums;
 namespace Gateway.DB
 {
     public interface IRepositoryManager
@@ -11,6 +12,6 @@ namespace Gateway.DB
 
         IdempotencyRecord GetIdempotencyRecord(string idempotencyKey);
 
-        void UpdateStatus(int id, string status);
+        void UpdatePaymentRecord(int id, BankResponse bankResponse);
     }
 }

@@ -3,6 +3,7 @@ using Gateway.Api.Mapper;
 using Gateway.DB;
 using Gateway.Domain;
 using Gateway.Service.Validation;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Gateway.Service.Test
         private RequestManager manager;
         private PaymentRequest request;
         private IMapper mapper;
+        private ILogger<RequestManager> logger;
 
         private Mock<IRepositoryManager> repositoryManagerMock;
         private Mock<IRequestManager> requestManagerMock;
@@ -26,6 +28,7 @@ namespace Gateway.Service.Test
 
             request = new PaymentRequest()
             {
+                IdempotencyKey=IdempotencyKey,
                 Amount = 10,
                 ExpiryMonth = 1,
                 ExpiryYear = 2030,
@@ -40,17 +43,17 @@ namespace Gateway.Service.Test
             repositoryManagerMock = new Mock<IRepositoryManager>();
             repositoryManagerMock.Setup(r => r.UpdateStatus(It.IsAny<int>(), It.IsAny<string>())).Verifiable();
             requestManagerMock = new Mock<IRequestManager>();
-            requestManagerMock.Setup(r => r.CreatePaymentRecord(It.IsAny<PaymentRequest>())).Returns(new Payment());
-            requestManagerMock.Setup(r => r.CreateIdempotencyRecord(It.IsAny<string>(), It.IsAny<PaymentRequest>())).Verifiable();
+            requestManagerMock.Setup(r => r.CreatePaymentRecordAndIdempotencyRecord(It.IsAny<PaymentRequest>())).Returns(new Payment());
+            requestManagerMock.Setup(r => r.CreateIdempotencyRecord(It.IsAny<string>(), It.IsAny<Payment>())).Verifiable();
             repositoryManagerMock.Setup(r => r.GetPayment(It.IsAny<int>())).Returns(Task.FromResult<Payment>(null));
             repositoryManagerMock.Setup(r => r.GetIdempotencyRecord(It.IsAny<string>())).Returns(new IdempotencyRecord());
-            manager = new RequestManager(repositoryManagerMock.Object, mapper);
+            manager = new RequestManager(repositoryManagerMock.Object, logger, mapper);
         }
 
         [Test]
         public async Task ValidRequest_ReturnsNoErrorsAsync()
         {
-            var actualResponse = await manager.CreatePaymentRequest(IdempotencyKey, request);
+            var actualResponse = await manager.CreatePaymentRequest(request);
             var expectedResponse = new PaymentResponse()
             {
                 Amount = 10,
@@ -60,7 +63,7 @@ namespace Gateway.Service.Test
                 Status = "Succeeded",
                 Name = "J Devlin",
                 Number = "4658584090000001",
-                PaymentId = 0
+                Id = 0
             };
 
             Assert.AreEqual(expectedResponse.Amount, actualResponse.Amount);
@@ -99,7 +102,7 @@ namespace Gateway.Service.Test
         public void CreatePaymnetRecord_ValidPaymentRequest_ReturnsPaymentEntity()
         {
             repositoryManagerMock.Setup(r => r.Insert(It.IsAny<Payment>())).Verifiable();
-            var payment = manager.CreatePaymentRecord(request);
+            var payment = manager.CreatePaymentRecordAndIdempotencyRecord(request);
             Assert.AreEqual("Created", payment.Status);
             Assert.AreEqual(payment.CreatedDateTime, payment.LastUpdatedDateTime);
             Assert.AreEqual("************0001", payment.Number);

@@ -1,4 +1,6 @@
-﻿namespace Gateway.DB
+﻿using Gateway.Domain;
+
+namespace Gateway.DB
 {
     public class RepositoryManager : IRepositoryManager
     {
@@ -30,10 +32,11 @@
             return _context.IdempotencyRecords.SingleOrDefault(x => x.IdempotencyKey == idempotencyKey);
         }
 
-        public void UpdateStatus(int id, string status)
+        public void UpdatePaymentRecord(int id, BankResponse bankResponse)
         {
             var payment = _context.Payments.FirstOrDefault(x => x.Id == id);
-            payment.Status = status;
+            payment.Status = bankResponse.Status;
+            payment.IssuingBank = bankResponse.IssuingBank;
             _context.SaveChanges();
         }
     }

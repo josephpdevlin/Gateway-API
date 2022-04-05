@@ -1,35 +1,39 @@
 ﻿using AutoMapper;
 using Gateway.DB;
 using Gateway.Domain;
+using Microsoft.Extensions.Logging;
 
 namespace Gateway.Service
 {
     public class RequestManager : IRequestManager
     {
         private readonly IRepositoryManager _repositoryManager;
+        private readonly ILogger<RequestManager> _logger;
         private readonly IMapper _mapper;
 
-        public RequestManager(IRepositoryManager repositoryManager, IMapper mapper)
+        public RequestManager(IRepositoryManager repositoryManager, ILogger<RequestManager> logger, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<PaymentResponse> CreatePaymentRequest(string idempotencyKey, PaymentRequest paymentRequest)
+        public async Task<PaymentResponse> CreatePaymentRequest(PaymentRequest paymentRequest)
         {
-            var payment = CreatePaymentRecord(paymentRequest);
-
-            CreateIdempotencyRecord(idempotencyKey, paymentRequest);
+            var payment = CreatePaymentRecordAndIdempotencyRecord(paymentRequest);
 
             var bankResponse = await SimulatedBank.ProcessPaymentRequest(paymentRequest);
-            if(bankResponse == null)
-                return _mapper.Map<PaymentResponse>(paymentRequest);
+            if (bankResponse == null)
+            {
+                _logger.LogWarning("No response received from bank");
+                return _mapper.Map<PaymentResponse>(payment);
+            }
 
-            _repositoryManager.UpdateStatus(payment.Id, bankResponse.Status);
+            _repositoryManager.UpdatePaymentRecord(payment.Id, bankResponse);
 
             var response = new PaymentResponse()
             {
-                PaymentId = payment.Id,
+                Id = payment.Id,
                 Amount = paymentRequest.Amount,
                 Name = paymentRequest.Name,
                 Number = paymentRequest.Number,
@@ -51,7 +55,7 @@ namespace Gateway.Service
                 throw new InvalidRequestException("Invalid payment id");
 
             var recordModel = _mapper.Map<PaymentResponse>(record);
-            recordModel.PaymentId = record.Id;
+            recordModel.Id = record.Id;
             return recordModel;
         }
 
@@ -66,17 +70,7 @@ namespace Gateway.Service
             return _mapper.Map<PaymentResponse>(response);
         }
 
-        public void CreateIdempotencyRecord(string idempotencyKey, PaymentRequest paymentRequest)
-        {
-            var idempotencyRecord = new IdempotencyRecord()
-            {
-                IdempotencyKey = idempotencyKey,
-                CreatedDateTime = DateTime.UtcNow
-            };
-            _repositoryManager.InsertIdempotencyRecord(idempotencyRecord);
-        }
-
-        public Payment CreatePaymentRecord(PaymentRequest paymentRequest)
+        public Payment CreatePaymentRecordAndIdempotencyRecord(PaymentRequest paymentRequest)
         {
             var payment = _mapper.Map<Payment>(paymentRequest);
 
@@ -87,7 +81,19 @@ namespace Gateway.Service
 
             payment.Number = MaskCardNumber(payment.Number);
             _repositoryManager.Insert(payment);
+
+            CreateIdempotencyRecord(paymentRequest.IdempotencyKey, payment);
             return payment;
+        }
+        public void CreateIdempotencyRecord(string idempotencyKey, Payment payment)
+        {
+            var idempotencyRecord = new IdempotencyRecord()
+            {
+                PaymentId = payment.Id,
+                IdempotencyKey = idempotencyKey,
+                CreatedDateTime = DateTime.UtcNow
+            };
+            _repositoryManager.InsertIdempotencyRecord(idempotencyRecord);
         }
 
         private string MaskCardNumber(string number)

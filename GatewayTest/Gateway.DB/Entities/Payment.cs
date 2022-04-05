@@ -22,6 +22,8 @@ namespace Gateway.DB
         [MaxLength(16)]
         public string Number { get; set; }
 
+        public string IssuingBank { get; set; }
+
         public int ExpiryMonth { get; set; }
 
         public int ExpiryYear { get; set; }

@@ -8,7 +8,7 @@ namespace Gateway.Domain
 {
     public class PaymentResponse
     {
-        public int PaymentId { get; set; }
+        public int Id { get; set; }
 
         public string Status { get; set; }
 
