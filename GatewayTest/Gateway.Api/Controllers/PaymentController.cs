@@ -26,7 +26,7 @@ namespace Gateway.Api.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get a payment request record for a given payment request id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
