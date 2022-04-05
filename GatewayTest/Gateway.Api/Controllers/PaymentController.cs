@@ -29,7 +29,7 @@ namespace Gateway.Api.Controllers
         /// Get a payment request record for a given payment request id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>A PaymentResponseDto for the requested payment record</returns>
         [HttpGet]
         [ApiKey]
         public async Task<ActionResult<PaymentResponseDto>> Get(int id)
