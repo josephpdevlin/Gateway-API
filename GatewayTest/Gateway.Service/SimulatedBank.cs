@@ -5,8 +5,12 @@ namespace Gateway.Service
 {
     public static class SimulatedBank
     {
-        public static async Task<BankResponse> ProcessPaymentRequest(PaymentRequest model)
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        public static async Task<BankResponse?> ProcessPaymentRequest(PaymentRequest model)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
+            // suppressing warning here has with a real bank, the program would await call to bank
+
             if (model.Number == "5555555555554444")
             {
                 return null;

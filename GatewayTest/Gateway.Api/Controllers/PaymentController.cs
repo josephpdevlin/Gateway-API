@@ -69,7 +69,6 @@ namespace Gateway.Api.Controllers
         ///     "expiryYear": 2023,
         ///     "cvv": 432
         /// }      
-        ///
         /// </remarks>
         /// <response code = "201">Returns response for the newly created payment</response>
         /// <response code = "400">If the request model is missing required values or invalid card number</response>

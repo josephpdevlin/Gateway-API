@@ -15,7 +15,7 @@ namespace Gateway.Service.Test
         private RequestManager manager;
         private PaymentRequest request;
         private IMapper mapper;
-        private ILogger<RequestManager> logger;
+        private static ILogger<RequestManager> logger;
 
         private Mock<IRepositoryManager> repositoryManagerMock;
         private Mock<IRequestManager> requestManagerMock;
@@ -36,7 +36,7 @@ namespace Gateway.Service.Test
                 Name = "J Devlin",
                 Number = "4658584090000001"
             };
-            
+            logger = new Mock<ILogger<RequestManager>>().Object;
             var config = new MapperConfiguration(opts => { opts.AddProfile(new PaymentMapping()); });
             mapper = config.CreateMapper();
             repositoryManagerMock = new Mock<IRepositoryManager>();
@@ -61,7 +61,7 @@ namespace Gateway.Service.Test
                 IssuingBank = "Monzo Bank Ltd",
                 Status = "Succeeded",
                 Name = "J Devlin",
-                Number = "4658584090000001",
+                Number = "************0001",
                 Id = 0
             };
 
