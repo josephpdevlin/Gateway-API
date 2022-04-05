@@ -85,18 +85,10 @@ namespace Gateway.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromHeader]string idempotencyKey, PaymentRequestDto model)
         {
-
             try
             {
                 if (idempotencyKey == "brew coffee")
                     return StatusCode(StatusCodes.Status418ImATeapot);
-
-                var duplicateRequest = await _requestManager.CheckForDuplicateRequest(idempotencyKey);
-                if (duplicateRequest != null)
-                {
-                    _logger.LogInformation($"Duplicate request for key {idempotencyKey}");
-                    return CreatedAtAction(nameof(Post), duplicateRequest);
-                }
 
                 var request = _mapper.Map<PaymentRequest>(model);
                 request.IdempotencyKey = idempotencyKey;
@@ -104,14 +96,11 @@ namespace Gateway.Api.Controllers
                 var validationErrors = _requestValidator.ValidateRequest(request);
                 if(validationErrors.Count > 0)
                 {
-                    var errorModel = new PaymentRequestErrorDto()
-                    {
-                        Errors = validationErrors
-                    };
+                    var errorModel = new PaymentRequestErrorDto() { Errors = validationErrors };
                     return new JsonResult(errorModel) { StatusCode = StatusCodes.Status422UnprocessableEntity};
                 }
 
-                var response = await _requestManager.CreatePaymentRequest(request);
+                var response = await _requestManager.ProcessPaymentRequest(request);
 
                 if (response.Status == "Succeeded" || response.Status == "Declined")
                     return new JsonResult(response) { StatusCode = StatusCodes.Status201Created };

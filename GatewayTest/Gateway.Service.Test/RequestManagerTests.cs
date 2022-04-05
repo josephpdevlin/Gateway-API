@@ -52,7 +52,7 @@ namespace Gateway.Service.Test
         [Test]
         public async Task ValidRequest_ReturnsNoErrorsAsync()
         {
-            var actualResponse = await manager.CreatePaymentRequest(request);
+            var actualResponse = await manager.ProcessPaymentRequest(request);
             var expectedResponse = new PaymentResponse()
             {
                 Amount = 10,

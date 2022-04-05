@@ -18,8 +18,12 @@ namespace Gateway.Service
             _logger = logger;
         }
 
-        public async Task<PaymentResponse> CreatePaymentRequest(PaymentRequest paymentRequest)
+        public async Task<PaymentResponse> ProcessPaymentRequest(PaymentRequest paymentRequest)
         {
+            var existingPaymentRecord = await CheckForDuplicateRequest(paymentRequest.IdempotencyKey);
+            if (existingPaymentRecord != null)
+                return existingPaymentRecord;
+
             var payment = CreatePaymentRecordAndIdempotencyRecord(paymentRequest);
 
             var bankResponse = await SimulatedBank.ProcessPaymentRequest(paymentRequest);

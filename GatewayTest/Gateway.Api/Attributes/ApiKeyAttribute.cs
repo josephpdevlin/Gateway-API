@@ -36,6 +36,5 @@ namespace Gateway.Api.Attributes
             }
             await next();
         }
-
     }
 }

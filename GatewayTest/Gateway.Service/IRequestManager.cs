@@ -5,7 +5,7 @@ namespace Gateway.Service
 {
     public interface IRequestManager
     {
-        Task<PaymentResponse> CreatePaymentRequest(PaymentRequest model);
+        Task<PaymentResponse> ProcessPaymentRequest(PaymentRequest model);
 
         Task<PaymentResponse> GetPaymentRecord(int id);
 
