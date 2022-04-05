@@ -2,7 +2,7 @@
 {
     public class RepositoryManager : IRepositoryManager
     {
-        private GatewayDbContext _context;
+        private readonly GatewayDbContext _context;
        
         public RepositoryManager(GatewayDbContext context)
         {

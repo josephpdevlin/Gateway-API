@@ -11,7 +11,7 @@ namespace Gateway.Service
             {
                 return new BankResponse()
                 {
-                    Status = "Succeded",
+                    Status = "Succeeded",
                     Amount = model.Amount,
                     IssuingBank = "Monzo Bank Ltd"
                 };

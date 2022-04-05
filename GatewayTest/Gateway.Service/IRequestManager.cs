@@ -1,4 +1,5 @@
-﻿using Gateway.Domain;
+﻿using Gateway.DB;
+using Gateway.Domain;
 
 namespace Gateway.Service
 {
@@ -8,6 +9,10 @@ namespace Gateway.Service
 
         Task<PaymentResponse> GetPaymentRecord(int id);
 
-        PaymentResponse CheckForDuplicateRequest(string idempotencyKey);
+        Task<PaymentResponse?> CheckForDuplicateRequest(string idempotencyKey);
+
+        void CreateIdempotencyRecord(string idempotencyKey, PaymentRequest payment);
+
+        Payment CreatePaymentRecord(PaymentRequest payment);
     }
 }

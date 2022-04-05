@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gateway.Api.Models;
 using Gateway.DB;
+using Gateway.Domain;
 
 namespace Gateway.Api.Mapper
 {
@@ -8,8 +9,11 @@ namespace Gateway.Api.Mapper
     {
         public PaymentMapping()
         {
-            CreateMap<PaymentRequestDto, Payment>();
+            CreateMap<PaymentRequest, PaymentRequestDto>().ReverseMap();
+            CreateMap<PaymentRequest, Payment>().ReverseMap();
             CreateMap<PaymentResponseDto, Payment>().ReverseMap();
+            CreateMap<PaymentResponse, Payment>().ReverseMap();
+            CreateMap<PaymentResponse, PaymentResponseDto>();
         }
     }
 }

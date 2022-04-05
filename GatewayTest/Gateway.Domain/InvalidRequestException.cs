@@ -4,7 +4,6 @@
     {
         public InvalidRequestException(string message) : base(message)
         {
-
         }
     }
 }

@@ -41,13 +41,14 @@ namespace Gateway.Api.Controllers
         {
             try
             {
-                var duplicateRequest = _requestManager.CheckForDuplicateRequest(idempotencyKey);
+                var duplicateRequest = await _requestManager.CheckForDuplicateRequest(idempotencyKey);
                 if (duplicateRequest != null)
                 {
                     return CreatedAtAction(nameof(Post), duplicateRequest);
                 }
 
                 var request = _mapper.Map<PaymentRequest>(model);
+
                 var validationErrors = _requestValidator.ValidateRequest(request);
                 if(validationErrors.Count > 0)
                 {

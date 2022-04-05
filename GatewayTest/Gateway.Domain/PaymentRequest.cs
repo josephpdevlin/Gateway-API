@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gateway.Domain
+﻿namespace Gateway.Domain
 {
     public class PaymentRequest
     {
-        public string ReferenceKey { get; set; }
-
-        public int IdempotencyKey { get; set; }
-
         public decimal Amount { get; set; }
 
         public string Currency { get; set; }
