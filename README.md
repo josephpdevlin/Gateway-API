@@ -87,5 +87,6 @@ All unhandled errors will return a 500 and log an exception.
 - Cache recent payments that are more likely to be accessed by a user.
 - Integration tests for the full flow, possibly using SpecFlow with Given, When, Then Scenarios for main UseCases.
 - More consideration to making use of custom exceptions that bubble up to the controller and dictate the resulting response.
-- DI for DbContexts
+- DI for DbContext.
 - General refinement of function and property naming.
+- More time on validation.
