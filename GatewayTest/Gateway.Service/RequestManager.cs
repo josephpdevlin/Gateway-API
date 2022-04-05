@@ -15,33 +15,26 @@ namespace Gateway.Service
             _mapper = mapper;
         }
 
-        public async Task<PaymentResponse> CreatePaymentRequest(string idempotencyKey, PaymentRequest model)
+        public async Task<PaymentResponse> CreatePaymentRequest(string idempotencyKey, PaymentRequest paymentRequest)
         {
-            var payment = _mapper.Map<Payment>(model);
-            CreatePaymentRecord(payment);
+            var payment = CreatePaymentRecord(paymentRequest);
 
-            var idempotencyRecord = new IdempotencyRecord()
-            {
-                IdempotencyKey = idempotencyKey,
-                PaymentId = payment.Id,
-                CreatedDateTime = payment.CreatedDateTime,
-            };
-            _repositoryManager.InsertIdempotencyRecord(idempotencyRecord);
+            CreateIdempotencyRecord(idempotencyKey, paymentRequest);
 
-            var bankResponse = await SimulatedBank.ProcessPaymentRequest(model);
+            var bankResponse = await SimulatedBank.ProcessPaymentRequest(paymentRequest);
             if(bankResponse == null)
-                return _mapper.Map<PaymentResponse>(payment);
+                return _mapper.Map<PaymentResponse>(paymentRequest);
 
             _repositoryManager.UpdateStatus(payment.Id, bankResponse.Status);
 
             var response = new PaymentResponse()
             {
                 PaymentId = payment.Id,
-                Amount = payment.Amount,
-                Name = payment.Name,
-                Number = payment.Number,
-                ExpiryMonth = payment.ExpiryMonth,
-                ExpiryYear = payment.ExpiryYear,
+                Amount = paymentRequest.Amount,
+                Name = paymentRequest.Name,
+                Number = paymentRequest.Number,
+                ExpiryMonth = paymentRequest.ExpiryMonth,
+                ExpiryYear = paymentRequest.ExpiryYear,
                 ProcessedDate = payment.CreatedDateTime,
                 Status = bankResponse.Status,
                 IssuingBank = bankResponse.IssuingBank,
@@ -52,6 +45,7 @@ namespace Gateway.Service
 
         public async Task<PaymentResponse> GetPaymentRecord(int id)
         {
+
             var record = await _repositoryManager.GetPayment(id);
             if (record == null)
                 throw new InvalidRequestException("Invalid payment id");
@@ -61,8 +55,31 @@ namespace Gateway.Service
             return recordModel;
         }
 
-        private void CreatePaymentRecord(Payment payment)
+        public async Task<PaymentResponse?> CheckForDuplicateRequest(string idempotencyKey)
         {
+            var idempotencyRecord = _repositoryManager.GetIdempotencyRecord(idempotencyKey);
+            if (idempotencyRecord == null)
+                return null;
+
+            var response =  await _repositoryManager.GetPayment(idempotencyRecord.PaymentId);
+
+            return _mapper.Map<PaymentResponse>(response);
+        }
+
+        public void CreateIdempotencyRecord(string idempotencyKey, PaymentRequest paymentRequest)
+        {
+            var idempotencyRecord = new IdempotencyRecord()
+            {
+                IdempotencyKey = idempotencyKey,
+                CreatedDateTime = DateTime.UtcNow
+            };
+            _repositoryManager.InsertIdempotencyRecord(idempotencyRecord);
+        }
+
+        public Payment CreatePaymentRecord(PaymentRequest paymentRequest)
+        {
+            var payment = _mapper.Map<Payment>(paymentRequest);
+
             payment.Status = "Created";
             var dateTime = DateTime.UtcNow;
             payment.CreatedDateTime = dateTime;
@@ -70,17 +87,7 @@ namespace Gateway.Service
 
             payment.Number = MaskCardNumber(payment.Number);
             _repositoryManager.Insert(payment);
-        }
-
-        public PaymentResponse CheckForDuplicateRequest(string idempotencyKey)
-        {
-            var idempotencyRecord = _repositoryManager.GetIdempotencyRecord(idempotencyKey);
-            if (idempotencyRecord == null)
-                return null;
-
-            var response =  _repositoryManager.GetPayment(idempotencyRecord.PaymentId);
-
-            return _mapper.Map<PaymentResponse>(response);
+            return payment;
         }
 
         private string MaskCardNumber(string number)

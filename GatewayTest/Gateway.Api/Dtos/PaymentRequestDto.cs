@@ -4,10 +4,8 @@ namespace Gateway.Api.Models
 {
     public class PaymentRequestDto
     {
-        public string ReferenceKey { get; set; }
-
-        public int IdempotencyKey { get; set; }
-
+        [Required]
+        [Range(0,int.MaxValue)]
         public decimal Amount { get; set; }
 
         [Required]
