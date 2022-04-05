@@ -7,7 +7,11 @@ namespace Gateway.Service
     {
         public static async Task<BankResponse> ProcessPaymentRequest(PaymentRequest model)
         {
-            if(model.Amount <= 100m)
+            if (model.Number == "5555555555554444")
+            {
+                return null;
+            }
+            else if (model.Amount <= 100m)
             {
                 return new BankResponse()
                 {
@@ -15,10 +19,6 @@ namespace Gateway.Service
                     Amount = model.Amount,
                     IssuingBank = "Monzo Bank Ltd"
                 };
-            }
-            else if (model.Number == "5555555555554444")
-            {
-                return null;
             }
             else
             {

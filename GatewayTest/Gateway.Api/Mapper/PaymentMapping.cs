@@ -14,6 +14,7 @@ namespace Gateway.Api.Mapper
             CreateMap<PaymentResponseDto, Payment>().ReverseMap();
             CreateMap<PaymentResponse, Payment>().ReverseMap();
             CreateMap<PaymentResponse, PaymentResponseDto>();
+            CreateMap<PaymentResponse, PaymentRequest>().ReverseMap();
         }
     }
 }

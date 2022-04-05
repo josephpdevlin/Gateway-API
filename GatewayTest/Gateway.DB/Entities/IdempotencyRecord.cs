@@ -12,6 +12,8 @@ namespace Gateway.DB
 
         public string IdempotencyKey { get; set; }
 
+        public int RequestCount { get; set; }
+
         public int PaymentId { get; set; }
         public virtual Payment Payment { get; set; }
 
