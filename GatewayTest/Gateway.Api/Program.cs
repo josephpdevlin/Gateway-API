@@ -1,3 +1,4 @@
+using Gateway.Api;
 using Gateway.DB;
 using Gateway.Service;
 using Gateway.Service.Validation;
@@ -23,6 +24,8 @@ builder.Services.AddSwaggerGen(options =>
 
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+    options.OperationFilter<DefaultSwaggerHeader>();
 }); 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IRequestManager, RequestManager>();

@@ -2,7 +2,6 @@ using AutoMapper;
 using Gateway.Api.Mapper;
 using Gateway.DB;
 using Gateway.Domain;
-using Gateway.Service.Validation;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -41,7 +40,7 @@ namespace Gateway.Service.Test
             var config = new MapperConfiguration(opts => { opts.AddProfile(new PaymentMapping()); });
             mapper = config.CreateMapper();
             repositoryManagerMock = new Mock<IRepositoryManager>();
-            repositoryManagerMock.Setup(r => r.UpdateStatus(It.IsAny<int>(), It.IsAny<string>())).Verifiable();
+            repositoryManagerMock.Setup(r => r.UpdatePaymentRecord(It.IsAny<int>(), It.IsAny<BankResponse>())).Verifiable();
             requestManagerMock = new Mock<IRequestManager>();
             requestManagerMock.Setup(r => r.CreatePaymentRecordAndIdempotencyRecord(It.IsAny<PaymentRequest>())).Returns(new Payment());
             requestManagerMock.Setup(r => r.CreateIdempotencyRecord(It.IsAny<string>(), It.IsAny<Payment>())).Verifiable();

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Gateway.Api.Attributes;
 using Gateway.Api.Models;
 using Gateway.Domain;
 using Gateway.Service;
@@ -30,6 +31,7 @@ namespace Gateway.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [ApiKey]
         public async Task<ActionResult<PaymentResponseDto>> Get(int id)
         {
             try
@@ -75,6 +77,7 @@ namespace Gateway.Api.Controllers
         /// <response code = "422">If the request validation fails</response>
         /// <response code = "500">If a general server error occurs</response>
         [HttpPost]
+        [ApiKey]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status418ImATeapot)]
