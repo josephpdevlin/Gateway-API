@@ -40,7 +40,7 @@ namespace Gateway.Service
                 Id = payment.Id,
                 Amount = paymentRequest.Amount,
                 Name = paymentRequest.Name,
-                Number = paymentRequest.Number,
+                Number = payment.Number,
                 ExpiryMonth = paymentRequest.ExpiryMonth,
                 ExpiryYear = paymentRequest.ExpiryYear,
                 ProcessedDate = payment.CreatedDateTime,
