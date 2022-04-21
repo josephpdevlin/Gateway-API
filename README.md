@@ -1,4 +1,4 @@
-# Gateway-API
+# Test-API
 A simple api that allows a merchant to submit payments for processing and retrieve details of previous payments.
 
 This application is build using .NET 6 and makes use of an in memory database for the purpose of this task.
